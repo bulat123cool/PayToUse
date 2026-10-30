@@ -1,1 +1,38 @@
+local key = 123
+local allies = {}
+local method = "1"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+local setttings = Instance.new("Folder",game.Players.LocalPlayer.StarterGear)
+setttings.Name = "Settings"
+local zey = Instance.new("StringValue",setttings)
+zey.Name = "Key"
+zey.Value = key
+local alllies = Instance.new("StringValue",setttings)
+alllies.Name = "Allies"
+local allstring = nil
+for i,v in pairs(allies) do
+	if allstring == nil then
+		allstring = v
+	else
+		allstring = allstring.." "..v
+	end
+end
+if allstring ~= nil then
+	alllies.Value = allstring
+end
+local methodi = Instance.new("StringValue",setttings)
+methodi.Name = "Method"
+methodi.Value = method
