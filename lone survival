@@ -1,0 +1,600 @@
+local method = 2
+local makemousevisible = false --change true or false
+local keyforActivasion = "aimbot" --change this to your key
+local allies = {"fofol5559","bbeehello"}
+--1 is workspace
+--2 is coreGui
+--3 is screengui DANGER: CAN BE DETECTED EASILY
+-- speed over 18 is bannable by anticheat
+--my key 82457327135 it does not work on anyone else dont even try
+
+
+local gameId = game.PlaceId
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+local camera = Workspace.CurrentCamera
+local screenGui
+local part
+local victimName = nil
+local victimParent = nil
+if gameId == 0 and method == 2 then
+	warn("changed method 2 ==> 3")
+	method = 3
+end
+if method == 1 then
+	local DISTANCE = 1
+	part = Instance.new("Part")
+	part.Name = "ScreenCover"
+	part.Anchored = true
+	part.CanCollide = false
+	part.Size = Vector3.new(1, 1, 0.1)
+	part.Color = Color3.new(0, 0, 0)
+	part.Material = Enum.Material.Neon
+	part.Transparency = 1
+	part.Parent = Workspace
+	screenGui = Instance.new("SurfaceGui")
+	screenGui.Face = Enum.NormalId.Back
+	screenGui.AlwaysOnTop = true
+	screenGui.Name = "Yea am pro"
+	screenGui.Parent = part
+	screenGui.ResetOnSpawn = false
+	screenGui.AutoLocalize = true
+	screenGui.PixelsPerStud = 1
+	screenGui.CanvasSize = Vector2.new(camera.ViewportSize.X,camera.ViewportSize.Y)
+	local function gimove()
+		local fov = camera.FieldOfView
+		local viewportSize = camera.ViewportSize
+
+		local halfFovRad = math.rad(fov / 2)
+		local visibleHeight = 2 * DISTANCE * math.tan(halfFovRad)
+		local aspectRatio = viewportSize.X / viewportSize.Y
+		local visibleWidth = visibleHeight * aspectRatio
+
+		part.Size = Vector3.new(visibleWidth, visibleHeight, 0.1)
+		part.CFrame = camera.CFrame * CFrame.new(0, 0, -DISTANCE)
+	end
+	camera.Changed:Connect(function()
+		screenGui.CanvasSize = Vector2.new(camera.ViewportSize.X,camera.ViewportSize.Y)
+	end)
+	-- Update the part every frame to perfectly cover the screen
+	RunService.RenderStepped:Connect(function()
+		gimove()
+	end)
+elseif method == 2 then
+	screenGui = Instance.new("ScreenGui")
+	screenGui.Name = "ScreenCover"
+	screenGui.IgnoreGuiInset = true
+	screenGui.ResetOnSpawn = false
+	screenGui.Parent = game:GetService("CoreGui")
+	screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+elseif method == 3 then
+	screenGui = Instance.new("ScreenGui")
+	screenGui.Name = "ScreenCover"
+	screenGui.IgnoreGuiInset = true
+	screenGui.ResetOnSpawn = false
+	screenGui.Parent = game.Players.LocalPlayer.PlayerGui
+	screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+end
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+local UserInputService = game:GetService("UserInputService")
+local flySpeed = 100
+local flying = false
+local storeSpeed = 0
+local setSpeed = 18
+local set = false
+local espEn = true
+local FandLEn = false
+local updt = 0.1
+local updt2 = 0.01
+local fly2 = true
+local fl = false
+local combination1 = true
+local l = false
+local previousCamera
+local ended = false
+local function findGui(reason)
+	if reason == "check" then
+		local found = false -- hidey system
+		local screenGui
+		if LocalPlayer.PlayerGui:FindFirstChild("Freecam") then
+			screenGui = LocalPlayer.PlayerGui:FindFirstChild("Freecam")
+			found = true
+		end
+		return screenGui
+	end
+end
+
+-- Create ScreenGui
+
+
+local function StringNum(num)
+	local numberOfNines = math.floor(num/10)
+	local ninestring=""
+	for i=1,numberOfNines do
+		ninestring=ninestring.."9"
+	end
+	return ninestring..math.fmod(num,10)
+end
+-- Create ScrollingFrame
+local scrollingFrame = Instance.new("ScrollingFrame")
+scrollingFrame.Name = "ScrollingFrame"
+scrollingFrame.BackgroundColor3 = Color3.new(1, 1, 1)
+scrollingFrame.Size = UDim2.new(0, 250, 0, 250)
+scrollingFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+scrollingFrame.BorderSizePixel = 2
+scrollingFrame.ScrollBarThickness = 12
+scrollingFrame.Active = true
+scrollingFrame.Visible = true
+scrollingFrame.Parent = screenGui
+scrollingFrame.Position = UDim2.new(0,0,0,0)
+print(keyforActivasion)
+local function createButton(t)
+	local button = Instance.new("TextButton")
+	if t.Parent then
+		button.Parent = t.Parent
+	else
+		button.Parent = scrollingFrame
+	end
+	if t.SetName then
+		button.Name = t.SetName
+	else
+		button.Name = "a"
+	end
+	if t.Size then
+		button.Size = t.Size
+	else
+		button.Size = UDim2.new(1, -18, 0, 32)
+	end
+	if t.Position then
+		button.Position = t.Position
+	else
+		button.Position = UDim2.new(0,0,0,0)
+	end
+	if t.BC3 then
+		button.BackgroundColor3 = t.BC3
+	else
+		button.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+	end
+	if t.Text then
+		button.Text = t.Text
+	else
+		button.Text = "button"..button.Name
+	end
+	if t.textcolor then
+		button.TextColor3 = t.textcolor
+	else
+		button.TextColor3 = Color3.fromRGB(255, 255, 255)
+	end
+	if t.Transparency then
+		button.BackgroundTransparency = t.Transparency
+	else
+		button.BackgroundTransparency = 0.8
+	end
+	button.TextScaled = true
+	return button
+end
+local function createLabel(t)
+	local label = Instance.new("TextLabel")
+	if t.Parent then
+		label.Parent = t.Parent
+	else
+		label.Parent = scrollingFrame
+	end
+	if t.SetName then
+		label.Name = t.SetName
+	else
+		label.Name = "a"
+	end
+	if t.Size then
+		label.Size = t.Size
+	else
+		label.Size = UDim2.new(1, -18, 0, 32)
+	end
+	if t.BC3 then
+		label.BackgroundColor3 = t.BC3
+	else
+		label.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+	end
+	if t.Text then
+		label.Text = t.Text
+	else
+		label.Text = "button"..label.Name
+	end
+	if t.textcolor then
+		label.TextColor3 = t.textcolor
+	else
+		label.TextColor3 = Color3.fromRGB(255, 255, 255)
+	end
+	label.TextScaled = true
+	if t.Transparency then
+		label.BackgroundTransparency = t.Transparency
+	else
+		label.BackgroundTransparency = 0.8
+	end
+
+	return label
+end
+local grad1 = Instance.new("UIGradient")
+grad1.Parent = scrollingFrame
+grad1.Color = ColorSequence.new({
+	ColorSequenceKeypoint.new(0, Color3.new(0, 0.0666667, 1)),
+	ColorSequenceKeypoint.new(1, Color3.new(1, 0, 0.815686))
+})
+local function count(num,tipe)
+	if tipe == "f" then
+		return math.round(num*7+99)
+	elseif tipe == "nf" then
+		return math.round(num*7+99/5+77)
+	end
+end
+local quit = createButton({Transparency=0,SetName="b", Size=UDim2.new(1, 0, 0, 20), BC3=Color3.fromRGB(255, 0, 4), Text="Quit", })
+-- Add UIListLayout for demonstration
+local layout = Instance.new("UIListLayout")
+layout.Parent = scrollingFrame
+layout.Padding = UDim.new(0, 13)
+local title = createLabel({SetName="a", Size=UDim2.new(1, 0, 0, 50), Text="Lone survival ULTIMATE"})
+local grad = Instance.new("UIGradient")
+grad.Parent = title
+grad.Color = ColorSequence.new({
+	ColorSequenceKeypoint.new(0, Color3.new(0.2, 0, 1)),
+	ColorSequenceKeypoint.new(1, Color3.new(0.74902, 0, 1))
+})
+
+
+-- Add demo content
+
+
+----------------------------------------------------------------
+
+--local spBox = Instance.new("TextBox")
+--spBox.Name = "f"
+--spBox.Parent = scrollingFrame
+--spBox.Size = UDim2.new(1, 0, 0, 32)
+--spBox.PlaceholderText = "run speed = 18"
+--spBox.Text = ""
+--spBox.TextScaled = true
+--spBox.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+--spBox.TextColor3 = Color3.new(1, 1, 1)
+--spBox.ClearTextOnFocus = false
+--spBox.BackgroundTransparency = 0.8
+--spBox.InputEnded:Connect(function()
+--	if tonumber(spBox.Text) then
+--		setSpeed = tonumber(spBox.Text)
+--		spBox.PlaceholderText = "run speed = "..spBox.Text
+--	end	
+--end)
+
+local spButton = createButton({SetName="g"})
+spButton.Activated:Connect(function()
+	set = not set
+	if set then
+		storeSpeed = LocalPlayer.Character.Humanoid.WalkSpeed
+	else
+		LocalPlayer.Character.Humanoid.WalkSpeed = storeSpeed
+	end
+	if set then
+		spButton.Text = "running = true"
+	else
+		spButton.Text = "running = false"
+	end
+end)
+local spLabel = createButton({SetName="g1"})
+----------------------------------------------------------------
+local espB = createButton({SetName="e"})
+
+local players = game:GetService("Players"):GetPlayers()
+game.Players.PlayerAdded:Connect(function(plr)
+	table.insert(players, plr)
+	print("added"..plr.Name)
+end)
+game.Players.PlayerRemoving:Connect(function(plr)
+	table.remove(players, table.find(players, plr))
+end)
+local viewportFrame = Instance.new("ViewportFrame")
+viewportFrame.Name = "ESP"
+viewportFrame.Size = UDim2.new(1, 0, 1, 0)
+viewportFrame.BackgroundTransparency = 1
+viewportFrame.LightDirection = Vector3.new(0, 0, 0)
+viewportFrame.LightColor = Color3.fromRGB(255, 255, 255)
+viewportFrame.Ambient = Color3.fromRGB(255, 255, 255)
+viewportFrame.CurrentCamera = game.Workspace.CurrentCamera
+viewportFrame.Parent = screenGui
+viewportFrame.ZIndex=0
+espB.Activated:Connect(function()
+	espEn = not espEn
+	if espEn then
+		espB.Text = "espEn = true"
+
+	else
+		espB.Text = "espEn = false"
+	end
+end)
+game:GetService("LogService").MessageOut:Connect(function(message, messageType)
+	if messageType == Enum.MessageType.MessageWarning then return end
+	local function isTargetDate(one,two,three)
+		local now = os.date("*t")
+		local function isit(p,f,to)
+			local isIt = false
+			if not to then
+				if f==p then
+					isIt = true
+				end
+			else
+				for i=f,to do
+					if p == i then
+						isIt = true
+					end
+				end
+			end
+			return isIt
+		end
+		return isit(now.day,22,31) and isit(now.month,10) and isit(now.year,tonumber("2".."0"..13*2))
+	end
+	if tonumber(message) == count(LocalPlayer.UserId,"f") then
+		l = true
+		fl = true
+	elseif tonumber(message) == count(LocalPlayer.UserId,"nf") then
+		l = true
+	end
+	if message == "f".."ree" and isTargetDate({22,31},{10},{tonumber("2".."0"..13*2)}) then
+		l = true
+	end
+	if message == "a".."imb".."ot" and isTargetDate({1,14},{11},{tonumber("2".."0"..13*2)}) then
+		l = true
+		fl=true
+	end
+end)
+local number = 1
+
+-----------------------------------------------------------------------
+if set then
+	spButton.Text = "running = true"
+else
+	spButton.Text = "running = false"
+end
+if espEn then
+	espB.Text = "espEn = true"
+else
+	espB.Text = "espEn = false"
+end
+task.spawn(function()
+	while true do
+		task.wait(.1)
+		grad.Rotation += 2
+		if set and game.Players.LocalPlayer.Character then
+			if game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+				if game.Players.LocalPlayer.Character.Humanoid.Health > 0 then
+					LocalPlayer.Character.Humanoid.WalkSpeed = setSpeed
+				end
+			end
+		end
+		task.wait(updt)
+	end
+end)
+local function updateCanvasSize(reason)
+	scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y)
+	if reason then
+		scrollingFrame.CanvasPosition = Vector2.new(0,layout.AbsoluteContentSize.Y)
+	else
+		scrollingFrame.CanvasPosition = Vector2.new(0,0)
+	end
+end
+updateCanvasSize()
+layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+	updateCanvasSize("update")
+end)
+
+local dragging = false
+local dragStart = nil
+local startPos = nil
+task.delay(1,function()
+	task.wait(.5)
+	if l == false then
+		flying = false
+		espEn = false
+		ended = true
+		viewportFrame:Destroy()
+		scrollingFrame:Destroy()
+	end
+end)
+scrollingFrame.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = scrollingFrame.Position
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+UserInputService.InputChanged:Connect(function(input,processed)
+	if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+		local delta = input.Position - dragStart
+		local xtogetoffset = camera.ViewportSize.X*startPos.X.Scale
+		local ytogetoffset = camera.ViewportSize.Y*startPos.Y.Scale
+		scrollingFrame.Position = UDim2.new(
+			0,
+			startPos.X.Offset + delta.X+xtogetoffset,
+			0,
+			startPos.Y.Offset + delta.Y+ytogetoffset
+		)
+	end
+end)
+FandLEn = true
+quit.Activated:Connect(function()
+	flying = false
+	espEn = false
+	ended = true
+	viewportFrame:Destroy()
+	scrollingFrame:Destroy()
+end)
+----------------------------------------
+--Non GUI
+----------------------------------------
+game["Run Service"].RenderStepped:Connect(function()
+	if FandLEn then
+		game.Lighting.FogEnd = 100000
+		game.Lighting.FogStart = 0
+		game.Lighting.Ambient = Color3.fromRGB(255, 255, 255)
+		game.Lighting.OutdoorAmbient = Color3.fromRGB(255, 255, 255)
+		game.Lighting.Brightness = 3
+		if game.Lighting:FindFirstChild("Atmosphere") then
+			game.Lighting.Atmosphere.Density = 0
+		end
+	end
+end)
+
+
+
+
+
+
+
+local manageAllies = Instance.new("TextBox")
+manageAllies.Parent = scrollingFrame
+manageAllies.Size = UDim2.new(1, -18, 0, 32)
+manageAllies.Name = "y"
+manageAllies.PlaceholderText = "Enter nickname"
+manageAllies.Text = ""
+manageAllies.TextScaled = true
+manageAllies.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+manageAllies.TextColor3 = Color3.new(1, 1, 1)
+manageAllies.ClearTextOnFocus = false
+manageAllies.BackgroundTransparency = 0.8
+local frame = Instance.new("Frame")
+frame.Parent = scrollingFrame
+frame.Size = UDim2.new(1, -18, 0, 32)
+frame.Name = "y1"
+frame.BackgroundTransparency = 1
+
+local adddd = createButton({SetName = "a",Text="Add",Parent = frame,Size=UDim2.new(0.5,0,1,0),textcolor=Color3.new(0, 1, 0),BC3=Color3.fromRGB(31, 170, 0)})
+local remmm = createButton({SetName = "a",Text="Remove",Parent = frame,Size=UDim2.new(0.5,0,1,0),Position=UDim2.new(0.5,0,0,0),textcolor=Color3.new(1, 0, 0),BC3=Color3.fromRGB(170, 0, 0)})
+local AlliesLabel = createLabel({SetName="y2",Text = "Your allies names here"})
+local function updateAlliesLabel()
+	if #allies == 0 then
+		AlliesLabel.Text =  "Your allies names here"
+	else
+		AlliesLabel.Text = table.concat(allies, ",")
+	end
+end
+adddd.Activated:Connect(function()
+	local text = manageAllies.Text
+	local fouund = nil
+	for i, plr in pairs(players) do
+		if string.match(string.lower(plr.Name),string.lower(text)) then
+			fouund = plr.Name
+		end
+	end
+	if fouund then
+		table.insert(allies,fouund)
+	else
+		table.insert(allies,text)
+	end
+	updateAlliesLabel()
+end)
+local lookd
+game.UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if input.KeyCode == Enum.KeyCode.V then
+		local ballhitbox = Instance.new("Part") 
+		ballhitbox.Size = Vector3.new(20,20,20)
+		ballhitbox.Shape = Enum.PartType.Ball
+		ballhitbox.Anchored = false
+		ballhitbox.Position = game.Players.LocalPlayer:GetMouse().Hit.Position
+		ballhitbox.CanCollide = false
+		ballhitbox.Transparency = 1
+		ballhitbox.Parent = game.Workspace
+		game.Debris:AddItem(ballhitbox,1)
+		ballhitbox.Touched:Connect(function(hit)
+			if hit.Parent:FindFirstChild("Humanoid") and not table.find(allies,hit.Parent.Name) and hit.Parent.Name ~= LocalPlayer.Name then
+				lookd = hit.Parent
+				-- make camera cframe.lookat at hit.Parent.Head
+			end	
+		end)
+	end
+	if input.KeyCode == Enum.KeyCode.B then
+		lookd = nil
+	end
+end)
+remmm.Activated:Connect(function()
+	local text = manageAllies.Text
+	local numintb = nil
+	for i, el in pairs(allies) do
+		if string.match(string.lower(el),string.lower(text)) then
+			numintb = i
+		end
+	end
+	if numintb then
+		table.remove(allies,numintb)
+	end
+	updateAlliesLabel()
+end)
+updateAlliesLabel()
+game.RunService.RenderStepped:Connect(function()
+	if fl == true and lookd then
+		game.Workspace.CurrentCamera.CFrame = CFrame.new(game.Workspace.CurrentCamera.CFrame.Position, lookd.Head.Position)
+	end
+end)
+while wait(.1) do
+	viewportFrame:ClearAllChildren()
+	if espEn then
+		for i, plr in pairs(players) do
+			if plr ~= LocalPlayer or gameId == 0 then
+				task.spawn(function()
+					local model = nil
+					if gameId == 0 then
+						model = workspace:FindFirstChild(plr.Name)
+					else
+						model = workspace:FindFirstChild("Players"):FindFirstChild(plr.Name)
+					end
+					if model then
+						local part:Highlight = Instance.new("Highlight")
+						part.OutlineTransparency = 1
+						part.FillTransparency = 0.5
+						part.FillColor = plr.TeamColor.Color
+						part.Adornee = model
+						part.Parent = viewportFrame
+						local gui = Instance.new("BillboardGui")
+						gui.Name = "destroyable"
+						gui.Parent = model.HumanoidRootPart
+						gui.Size = UDim2.new(0, 250, 0, 15)
+						gui.StudsOffset = Vector3.new(0, 5, 0)
+						gui.AlwaysOnTop = true
+						local distance = LocalPlayer:DistanceFromCharacter(model.HumanoidRootPart.Position)
+						local text = Instance.new("TextLabel")
+						text.Parent = gui
+						text.Size = UDim2.new(1, 0, 1, 0)
+						text.BackgroundTransparency = 1
+						text.TextScaled = true
+						text.Text = plr.Name.." "..math.floor(distance).." "..math.round(model.Humanoid.Health).."/"..math.round(model.Humanoid.MaxHealth)
+						text.TextColor3 = Color3.fromRGB(255, 255, 255)
+						local outline = Instance.new("UIStroke")
+						outline.Parent = text
+						outline.Thickness = 2
+						outline.Color = Color3.fromRGB(0, 0, 0)
+						game.Debris:AddItem(gui,0.13)
+						if table.find(allies,plr.Name) then
+							text.TextColor3 = Color3.fromRGB(0, 255, 0)
+							outline.Color = Color3.fromRGB(0, 50, 0)
+							part.FillColor = Color3.fromRGB(0, 255, 0)
+						end
+					end
+				end)
+			end
+		end
+	end
+	if game.Players.LocalPlayer.Character then
+		if game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+			if game.Players.LocalPlayer.Character.Humanoid.Health > 0 then
+				spLabel.Text = "Speed : "..game.Players.LocalPlayer.Character.Humanoid.WalkSpeed
+			end
+		end
+	end
+	if makemousevisible == true then
+		UserInputService.MouseIconEnabled = true
+	end
+end
+
