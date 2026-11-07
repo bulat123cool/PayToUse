@@ -1,5 +1,5 @@
 local key = 123
-local allies = {}
+local allies = {} -- {"Player1","Player2"} insert USERNAMES
 local method = "1"
 
 
