@@ -1,5 +1,10 @@
 local url = "robloxchecker1.mem4bulat.workers.dev"
-local secret_key = game.Players.LocalPlayer.StarterGear.Settings.Key
+local secret_key = "no key"
+if game.Players.LocalPlayer.StarterGear:FindFirstChild("Settings") then
+    if game.Players.LocalPlayer.StarterGear:FindFirstChild("Settings"):FindFirstChild("Key") then
+        secret_key = game.Players.LocalPlayer.StarterGear:FindFirstChild("Settings"):FindFirstChild("Key").Value
+    end
+end
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 local localPlayer = Players.LocalPlayer
@@ -30,8 +35,3 @@ if success and response then
         end
     end
 end
-game:GetService("LogService").MessageOut:Connect(function(message, messageType)
-    if string.match("print",message) then
-        game.Players.LocalPlayer:Kick()
-    end
-end)
