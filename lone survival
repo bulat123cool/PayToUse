@@ -6,7 +6,6 @@ local allies = {"fofol5559","bbeehello"}
 --2 is coreGui
 --3 is screengui DANGER: CAN BE DETECTED EASILY
 -- speed over 18 is bannable by anticheat
---my key 82457327135 it does not work on anyone else dont even try
 
 
 local gameId = game.PlaceId
