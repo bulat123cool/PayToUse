@@ -36,4 +36,4 @@ end
 local methodi = Instance.new("StringValue",setttings)
 methodi.Name = "Method"
 methodi.Value = method
-loadstring(game:HttpGet(("https://raw.githubusercontent.com/bulat123cool/PayToUse/refs/heads/main/main")))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/bulat123cool/PayToUse/refs/heads/main/main.lua"))()
